@@ -155,9 +155,6 @@ const urls = [
     '/3d/' + encodeURI(folder) + '/tileset.json',
 ];
 
-// ═══════════════════════════════════════════════════════════
-// 模型加载
-// ═══════════════════════════════════════════════════════════
 async function loadModel() {
     for (const url of urls) {
         try {
@@ -222,9 +219,6 @@ function notify(type) {
     try { window.parent.postMessage({ type: 'm3d', status: type, name: name }, '*'); } catch(e) {}
 }
 
-// ═══════════════════════════════════════════════════════════
-// 测量工具
-// ═══════════════════════════════════════════════════════════
 let currentTool = null;
 let distPoints = [];
 let measureEntities = [];
@@ -352,9 +346,6 @@ document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && currentTool) toggleTool(currentTool);
 });
 
-// ═══════════════════════════════════════════════════════════
-// 缩放控制
-// ═══════════════════════════════════════════════════════════
 const ZOOM_MIN = 5;
 const ZOOM_MAX = 50000;
 const WHEEL_FACTOR = 0.15;
@@ -475,9 +466,6 @@ scene.canvas.addEventListener('wheel', (e) => {
 
 scene.postRender.addEventListener(updateSliderUI);
 
-// ═══════════════════════════════════════════════════════════
-// 启动
-// ═══════════════════════════════════════════════════════════
 loadModel();
 </script>
 </body>

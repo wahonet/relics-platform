@@ -1,5 +1,3 @@
-// 面板切换、全屏、全局重置、移动端底部导航。
-
 function _isMobile() { return window.innerWidth <= 768; }
 
 function updateLayout() {
@@ -72,8 +70,6 @@ function resetAll() {
 
     toast('已重置所有筛选和视图');
 }
-
-// 设置面板（当前极简模式默认隐藏，函数保留以兼容历史配置）。
 
 function toggleSettings() {
     const panel = document.getElementById('settingsPanel');
@@ -172,7 +168,6 @@ function setUISize(size) {
 }
 
 
-// 移动端底部导航。
 let _mobileTab = 'map';
 function _syncMobileNav(tab) {
     _mobileTab = tab;

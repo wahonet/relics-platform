@@ -1,5 +1,3 @@
-// Cesium 地图初始化、底图管理、指北针与比例尺。
-// Ion Token 由后端 /api/platform/config 注入；未配置时自动回退到本地 DEM。
 if (window.__PLATFORM_CONFIG && window.__PLATFORM_CONFIG.cesium_ion_token) {
     Cesium.Ion.defaultAccessToken = window.__PLATFORM_CONFIG.cesium_ion_token;
 }
@@ -38,7 +36,6 @@ viewer.scene.skyAtmosphere.show = false;
 viewer.scene.verticalExaggeration = 1.0;
 viewer.scene.verticalExaggerationRelativeHeight = 0.0;
 
-// 地形默认关闭，勾选后优先拉 Ion，失败再走 /api/terrain 本地 DEM。
 const _flatTerrain = new Cesium.EllipsoidTerrainProvider();
 let _terrainEnabled = false;
 let _terrainProvider = null;
@@ -164,7 +161,6 @@ function resetNorthView() {
     });
 }
 
-// 自定义缩放：禁用 Cesium 默认滚轮缩放，改用指数插值保证近处/远处手感一致。
 viewer.scene.screenSpaceCameraController.zoomEventTypes = [];
 viewer.scene.canvas.addEventListener('wheel', function(e) {
     e.preventDefault();

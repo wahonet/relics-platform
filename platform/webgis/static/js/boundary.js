@@ -1,4 +1,3 @@
-// 行政边界图层：县/乡镇/村三级 + 标注，折线做过道格拉斯-普克简化 + 均值平滑。
 const bndLayers = { county: [], township: [], townLabel: [], village: [], villageLabel: [] };
 let villageGeoJSON = null;
 let townshipNames = [];

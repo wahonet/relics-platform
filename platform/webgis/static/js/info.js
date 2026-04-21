@@ -1,4 +1,3 @@
-// 信息面板：基本信息 / 照片 / 图纸 / 简介 四个页签。
 let _currentInfoRelic = null;
 
 async function showInfo(r) {

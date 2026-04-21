@@ -1,4 +1,3 @@
-// 应用入口：加载数据、绑定交互、启动。
 async function init() {
     try {
         const [rResp, sResp] = await Promise.all([
@@ -12,7 +11,6 @@ async function init() {
         onFilterChange();
         loadPolygons();
         loadBoundaries();
-        // 极简模式：只保留地图与文物检索主链路，不加载路线/日志数据。
         document.getElementById('loading').style.display = 'none';
     } catch (e) {
         console.error(e);
@@ -22,7 +20,6 @@ async function init() {
 
 function updateBadges(s) {}
 
-// 单击：显示文物/路线点信息；双击：按乡镇或村筛选。
 const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 let _clickTimer = null;
 handler.setInputAction(function (click) {
@@ -64,7 +61,6 @@ handler.setInputAction(function (click) {
     }
 }, Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
 
-// ESC：优先关闭 3D/PDF 弹窗，否则整体重置。
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         const m3d = document.getElementById('model3dBox');
@@ -79,7 +75,6 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-// 在移动端对几个全局函数做包装，联动底部导航和筛选角标。
 (function _initMobile() {
     const origToggleChat = window.toggleChat;
     if (origToggleChat) {

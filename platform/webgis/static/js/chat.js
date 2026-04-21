@@ -1,4 +1,3 @@
-// AI 知识库对话：与后端 /api/chat 流式对接，消息里的 [[label|action]] 链接触发地图联动。
 let chatHistory = [];
 let chatStreaming = false;
 
@@ -50,7 +49,6 @@ function toggleChat() {
     }
 }
 
-// 轻量 Markdown 渲染；额外处理 [[label|action]] 作为地图/日志联动链接。
 function renderMd(text) {
     let h = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -112,7 +110,6 @@ function appendMsg(role, text) {
     return div;
 }
 
-// 聊天链接分发：fly:code 飞到文物；log:date 打开当天日志；其余按筛选串处理。
 function chatAction(actionStr) {
     if (actionStr.startsWith('fly:')) {
         const code = actionStr.slice(4);

@@ -1,4 +1,3 @@
-// 地图渲染：点位符号、颜色映射、面图层。符号/图例图标通过 Canvas 动态生成并缓存。
 function buildColorMap(relics, dim) {
     const counts = {};
     relics.forEach(r => { dimValues(r, dim).forEach(v => { counts[v] = (counts[v]||0)+1; }); });

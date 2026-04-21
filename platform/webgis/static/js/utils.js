@@ -1,4 +1,3 @@
-// 通用小工具。
 function toast(msg, isErr) {
     const el = document.getElementById('toast');
     el.textContent = msg;

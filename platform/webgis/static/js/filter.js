@@ -1,4 +1,3 @@
-// 筛选逻辑、结果列表、视角定位。
 function populateFilters() {
     const towns = new Set(), levels = new Set(), conds = new Set();
     const lvDim = DIMS.find(d => d.id === 'heritage_level');

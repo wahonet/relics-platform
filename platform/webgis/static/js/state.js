@@ -1,4 +1,3 @@
-// 跨模块共享的可变状态。
 let allRelics = [], filtered = [];
 let entityMap = {}, polygonEntities = [];
 let activeCats = new Set();
