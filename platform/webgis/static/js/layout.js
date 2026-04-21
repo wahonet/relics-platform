@@ -1,131 +1,22 @@
-// 仪表盘停靠、拖拽、面板切换、全屏、全局重置。
-const dashState = { dashL: { side: 'left' }, dashR: { side: 'right' } };
+// 面板切换、全屏、全局重置、移动端底部导航。
 
 function _isMobile() { return window.innerWidth <= 768; }
 
 function updateLayout() {
-    if (_isMobile()) {
-        clearTimeout(updateLayout._t);
-        updateLayout._t = setTimeout(() => Object.values(_charts).forEach(c => c && c.resize()), 350);
-        return;
-    }
-    const filterOpen = document.getElementById('filterPanel').classList.contains('open');
-    const infoOpen = document.getElementById('infoPanel').style.display === 'block';
-    const DASH_W = 320, DASH_GAP = 4, SIDE_W = 360;
-
-    const leftIds = [], rightIds = [];
-    ['dashL', 'dashR'].forEach(id => {
-        if (!document.getElementById(id).classList.contains('is-dragging')) {
-            (dashState[id].side === 'left' ? leftIds : rightIds).push(id);
-        }
-    });
-
-    let leftPos = filterOpen ? SIDE_W : 0;
-    leftIds.forEach(id => {
-        const el = document.getElementById(id);
-        el.classList.remove('dock-l', 'dock-r');
-        el.classList.add('dock-l');
-        el.style.left = leftPos + 'px';
-        el.style.right = '';
-        leftPos += DASH_W + DASH_GAP;
-    });
-
-    let rightPos = 0;
-    rightIds.forEach(id => {
-        const el = document.getElementById(id);
-        el.classList.remove('dock-l', 'dock-r');
-        el.classList.add('dock-r');
-        el.style.right = rightPos + 'px';
-        el.style.left = '';
-        rightPos += DASH_W + DASH_GAP;
-    });
-
+    if (_isMobile()) return;
+    const filterPanel = document.getElementById('filterPanel');
     const infoPanel = document.getElementById('infoPanel');
+    const filterOpen = filterPanel ? filterPanel.classList.contains('open') : false;
+    const infoOpen = infoPanel ? infoPanel.style.display === 'block' : false;
+    const SIDE_W = 360;
+
     if (infoOpen) {
-        const infoRight = rightIds.length > 0 ? (rightPos - DASH_GAP + 14) : 14;
-        infoPanel.style.right = infoRight + 'px';
+        infoPanel.style.right = '14px';
     }
 
-    const legendLeft = leftIds.length > 0 ? (leftPos - DASH_GAP + 16) : (filterOpen ? SIDE_W + 16 : 16);
-    document.getElementById('legend').style.left = legendLeft + 'px';
-
-    clearTimeout(updateLayout._t);
-    updateLayout._t = setTimeout(() => Object.values(_charts).forEach(c => c && c.resize()), 350);
-}
-
-function toggleDashSide(id) {
-    dashState[id].side = dashState[id].side === 'left' ? 'right' : 'left';
-    updateLayout();
-    setTimeout(() => Object.values(_charts).forEach(c => c && c.resize()), 350);
-}
-
-function toggleDashVis(id) {
-    const el = document.getElementById(id);
-    const collapsed = el.classList.toggle('collapsed');
-    const btn = el.querySelector('.dh-acts button:last-child');
-    if (btn) btn.textContent = collapsed ? '+' : '−';
-    setTimeout(() => Object.values(_charts).forEach(c => c && c.resize()), 50);
-}
-
-function initDashDrag() {
-    ['dashL', 'dashR'].forEach(id => {
-        const el = document.getElementById(id);
-        const hdr = el.querySelector('.dash-hdr');
-        let startX, startY, origRect, dragging;
-
-        hdr.addEventListener('pointerdown', e => {
-            if (e.target.closest('.dh-acts')) return;
-            e.preventDefault();
-            startX = e.clientX;
-            startY = e.clientY;
-            origRect = el.getBoundingClientRect();
-            dragging = false;
-
-            const hint = document.getElementById('dockHint');
-
-            function onMove(ev) {
-                const dx = ev.clientX - startX, dy = ev.clientY - startY;
-                if (!dragging && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
-                    dragging = true;
-                    el.classList.add('is-dragging');
-                    el.style.position = 'fixed';
-                    el.style.left = origRect.left + 'px';
-                    el.style.top = origRect.top + 'px';
-                    el.style.right = 'auto';
-                    el.style.bottom = 'auto';
-                    el.style.width = origRect.width + 'px';
-                    hint.classList.add('show');
-                }
-                if (dragging) {
-                    el.style.left = (origRect.left + dx) + 'px';
-                    el.style.top = (origRect.top + dy) + 'px';
-                    const side = ev.clientX < window.innerWidth / 2 ? 'left' : 'right';
-                    hint.className = 'show ' + (side === 'left' ? 'hint-l' : 'hint-r');
-                }
-            }
-
-            function onUp(ev) {
-                document.removeEventListener('pointermove', onMove);
-                document.removeEventListener('pointerup', onUp);
-                hint.className = '';
-
-                if (dragging) {
-                    el.classList.remove('is-dragging');
-                    el.style.position = '';
-                    el.style.top = '';
-                    el.style.bottom = '';
-                    el.style.width = '';
-
-                    dashState[id].side = ev.clientX < window.innerWidth / 2 ? 'left' : 'right';
-                    updateLayout();
-                    setTimeout(() => Object.values(_charts).forEach(c => c && c.resize()), 350);
-                }
-            }
-
-            document.addEventListener('pointermove', onMove);
-            document.addEventListener('pointerup', onUp);
-        });
-    });
+    const legendLeft = filterOpen ? SIDE_W + 16 : 16;
+    const legend = document.getElementById('legend');
+    if (legend) legend.style.left = legendLeft + 'px';
 }
 
 function togglePanel(which) {
@@ -152,12 +43,6 @@ function resetAll() {
     document.getElementById('btnFilter').classList.remove('on');
     document.getElementById('infoPanel').style.display = 'none';
 
-    document.getElementById('routePanel').classList.remove('open');
-    document.getElementById('btnRoute').classList.remove('on');
-    if (typeof routeDeselectAll === 'function') routeDeselectAll();
-    if (typeof closeRoutePopup === 'function') closeRoutePopup();
-    if (typeof _villageCoverageOn !== 'undefined' && _villageCoverageOn) toggleVillageCoverage();
-
     document.getElementById('searchInput').value = '';
     document.getElementById('filterTown').value = '';
     document.getElementById('filterLevel').value = '';
@@ -168,19 +53,12 @@ function resetAll() {
     statFilters = {};
 
     if (typeof _relicPointsHidden !== 'undefined' && _relicPointsHidden) {
-        document.getElementById('hideRelicToggle').checked = false;
+        const hideRelicToggle = document.getElementById('hideRelicToggle');
+        if (hideRelicToggle) hideRelicToggle.checked = false;
         toggleHideRelicPoints();
     }
     activeGroup = 'category_main';
     dimColorMaps = {};
-
-    dashState.dashL.side = 'left';
-    dashState.dashR.side = 'right';
-    document.querySelectorAll('.dash.collapsed').forEach(el => {
-        el.classList.remove('collapsed');
-        const btn = el.querySelector('.dh-acts button:last-child');
-        if (btn) btn.textContent = '−';
-    });
 
     onFilterChange();
     updateLayout();
@@ -195,8 +73,7 @@ function resetAll() {
     toast('已重置所有筛选和视图');
 }
 
-// 设置面板：图表开关、图表类型切换、主题、UI 尺寸、高清模式。
-const _chartTypes = {};
+// 设置面板（当前极简模式默认隐藏，函数保留以兼容历史配置）。
 
 function toggleSettings() {
     const panel = document.getElementById('settingsPanel');
@@ -224,30 +101,6 @@ function setTheme(name) {
     root.setProperty('--bd-active', t.bdActive);
     document.getElementById('header').style.background = 'linear-gradient(' + t.gradient + ')';
     document.querySelectorAll('.sp-theme').forEach(el => el.classList.toggle('on', el.getAttribute('data-theme') === name));
-    renderAllCharts(filtered);
-}
-
-function toggleChartVis(chartId, visible) {
-    const chartEl = document.getElementById(chartId);
-    if (!chartEl) return;
-    const sec = chartEl.closest('.dash-sec');
-    if (sec) sec.style.display = visible ? '' : 'none';
-    if (visible && _charts[chartId]) {
-        setTimeout(() => _charts[chartId].resize(), 50);
-    }
-}
-
-function setChartType(chartId, dimId, type, btnEl) {
-    _chartTypes[chartId] = { dimId, type };
-    const row = btnEl.closest('.sp-chart-type');
-    row.querySelectorAll('.sp-ct').forEach(b => b.classList.remove('on'));
-    btnEl.classList.add('on');
-    _renderOneChart(chartId, dimId, type, filtered);
-}
-
-function _renderOneChart(chartId, dimId, type, relics) {
-    const renderers = { pie: renderPie, bar: renderHBar, vbar: renderVBar, rose: renderRose, radar: renderRadar, treemap: renderTreemap };
-    (renderers[type] || renderPie)(chartId, dimId, relics);
 }
 
 function doLogout() {
@@ -302,31 +155,25 @@ function setUISize(size) {
     if (size === 'sm') {
         root.setProperty('--hdr', '42px');
         root.setProperty('--side-w', '300px');
-        root.setProperty('--dash-w', '270px');
         root.setProperty('--info-w', '370px');
         document.body.style.fontSize = '12px';
     } else if (size === 'lg') {
         root.setProperty('--hdr', '56px');
         root.setProperty('--side-w', '420px');
-        root.setProperty('--dash-w', '380px');
         root.setProperty('--info-w', '480px');
         document.body.style.fontSize = '15px';
     } else {
         root.setProperty('--hdr', '50px');
         root.setProperty('--side-w', '360px');
-        root.setProperty('--dash-w', '320px');
         root.setProperty('--info-w', '420px');
         document.body.style.fontSize = '13.5px';
     }
     updateLayout();
-    setTimeout(() => Object.values(_charts).forEach(c => c && c.resize()), 300);
 }
 
 
 // 移动端底部导航。
 let _mobileTab = 'map';
-let _mobileStatsTab = 'dashL';
-
 function _syncMobileNav(tab) {
     _mobileTab = tab;
     document.querySelectorAll('#mobileNav .mn-btn').forEach(btn => {
@@ -342,39 +189,18 @@ function mobileSetTab(tab) {
     });
 
     const body = document.body;
-    body.classList.remove('m-stats-l', 'm-stats-r');
     document.getElementById('filterPanel').classList.remove('open');
     document.getElementById('btnFilter').classList.remove('on');
-    document.getElementById('chatPanel').classList.remove('open');
 
     switch (tab) {
         case 'filter':
             document.getElementById('filterPanel').classList.add('open');
             document.getElementById('btnFilter').classList.add('on');
             break;
-        case 'stats':
-            body.classList.add(_mobileStatsTab === 'dashR' ? 'm-stats-r' : 'm-stats-l');
-            setTimeout(() => Object.values(_charts).forEach(c => c && c.resize()), 100);
-            break;
-        case 'chat':
-            document.getElementById('chatPanel').classList.add('open');
-            if (!document.getElementById('chatMessages').children.length) {
-                if (typeof appendMsg === 'function' && typeof _aiGreeting === 'function') {
-                    appendMsg('ai', _aiGreeting());
-                }
-            }
-            setTimeout(() => document.getElementById('chatInput').focus(), 100);
+        default:
+            _syncMobileNav('map');
             break;
     }
-}
-
-function mobileStatTab(dashId, el) {
-    _mobileStatsTab = dashId;
-    document.body.classList.remove('m-stats-l', 'm-stats-r');
-    document.body.classList.add(dashId === 'dashR' ? 'm-stats-r' : 'm-stats-l');
-    document.querySelectorAll('.mst-tab').forEach(t => t.classList.remove('active'));
-    if (el) el.classList.add('active');
-    setTimeout(() => Object.values(_charts).forEach(c => c && c.resize()), 100);
 }
 
 function _mobileUpdateFilterBadge() {

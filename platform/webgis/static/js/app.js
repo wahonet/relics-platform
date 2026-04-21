@@ -12,8 +12,7 @@ async function init() {
         onFilterChange();
         loadPolygons();
         loadBoundaries();
-        loadSurveyRoutes();
-        loadWorklogData();
+        // 极简模式：只保留地图与文物检索主链路，不加载路线/日志数据。
         document.getElementById('loading').style.display = 'none';
     } catch (e) {
         console.error(e);
@@ -110,7 +109,6 @@ document.addEventListener('keydown', function(e) {
     }
 })();
 
-initDashDrag();
 initMapZoomSlider();
 updateLayout();
 viewer.scene.postRender.addEventListener(updateScaleBar);

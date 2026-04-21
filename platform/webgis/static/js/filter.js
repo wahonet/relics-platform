@@ -75,7 +75,7 @@ function onFilterChange() {
     if (_symbolMode) _symbolCache = {};
     renderPoints(filtered);
     renderResultList(filtered);
-    renderAllCharts(filtered);
+    if (typeof renderAllCharts === 'function') renderAllCharts(filtered);
     updateLegend();
 
     updateStatusSummary();

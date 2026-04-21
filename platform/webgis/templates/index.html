@@ -18,6 +18,38 @@
             --green: #3fb950; --yellow: #d29922; --red: #f85149; --purple: #bc8cff; --gold: #ffd700;
             --hdr: 50px; --side-w: 360px; --dash-w: 320px; --info-w: 420px;
         }
+
+        /* ── 极简模式：仅保留核心浏览与筛选能力 ── */
+        body.minimal-mode #helpBtn,
+        body.minimal-mode #adminBtn,
+        body.minimal-mode #settingsBtn,
+        body.minimal-mode #logoutBtn,
+        body.minimal-mode #btnBoundary,
+        body.minimal-mode #btnLabel,
+        body.minimal-mode #settingsMask,
+        body.minimal-mode #settingsPanel,
+        body.minimal-mode #helpMask,
+        body.minimal-mode #helpPanel,
+        body.minimal-mode #boundaryMenu,
+        body.minimal-mode #labelMenu,
+        body.minimal-mode #dashL,
+        body.minimal-mode #dashR,
+        body.minimal-mode #dockHint {
+            display: none !important;
+        }
+
+        body.minimal-mode #toolbar .tb-range-wrap,
+        body.minimal-mode #toolbar #terrainToggle {
+            display: none !important;
+        }
+
+        body.minimal-mode #toolbar {
+            gap: 8px;
+        }
+
+        body.minimal-mode #statusSummary {
+            max-width: 320px;
+        }
         *{margin:0;padding:0;box-sizing:border-box}
         html,body{width:100%;height:100%;overflow:hidden;font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg);color:var(--t1)}
         ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
@@ -76,36 +108,6 @@
         .li-name{font-size:13px;color:var(--t1);margin-bottom:3px}
         .li-meta{font-size:11px;color:var(--t2);display:flex;gap:6px}
         .li-cat{color:var(--green)}.li-era{color:var(--accent2)}
-
-        /* ── (旧统计面板保留兼容) ── */
-        #statsPanel{display:none}
-        .dash{position:absolute;top:calc(var(--hdr) + 40px);bottom:0;width:var(--dash-w);z-index:100;background:rgba(13,17,23,.92);border:1px solid var(--bd);overflow-y:auto;backdrop-filter:blur(10px);padding:0;transition:left .3s ease,right .3s ease,opacity .2s}
-        .dash.dock-l{left:0;right:auto;border-left:none;border-radius:0 8px 8px 0}
-        .dash.dock-r{right:0;left:auto;border-right:none;border-radius:8px 0 0 8px}
-        .dash.is-dragging{position:fixed!important;z-index:400;opacity:.85;transition:none!important;box-shadow:0 12px 40px rgba(0,0,0,.6)}
-        .dash.collapsed .dash-cards,.dash.collapsed .dash-sec{display:none}
-        .dash.collapsed{bottom:auto;overflow:hidden}
-        #dockHint{display:none;position:fixed;top:calc(var(--hdr) + 40px);bottom:0;width:var(--dash-w);z-index:350;pointer-events:none;border:2px dashed var(--accent);background:rgba(88,166,255,.08);border-radius:8px}
-        #dockHint.show{display:block}
-        #dockHint.hint-l{left:0}
-        #dockHint.hint-r{right:0}
-        .dash-hdr{padding:12px 16px;font-size:14px;color:var(--accent2);font-weight:600;border-bottom:1px solid var(--bd);position:sticky;top:0;background:rgba(13,17,23,.98);z-index:1;display:flex;justify-content:space-between;align-items:center;cursor:grab;user-select:none}
-        .dash-hdr:active{cursor:grabbing}
-        .dash-hdr button{background:none;border:none;color:var(--t2);font-size:14px;cursor:pointer;padding:3px 6px;border-radius:3px;transition:background .15s}
-        .dash-hdr button:hover{background:rgba(255,255,255,.08);color:var(--t1)}
-        .dash-hdr .dh-acts{display:flex;gap:2px;align-items:center}
-        .dash-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:12px 14px}
-        .dc{background:var(--bg3);border-radius:6px;padding:10px;text-align:center;border:1px solid rgba(255,255,255,.03)}
-        .dc .n{font-size:22px;font-weight:700;color:var(--accent);line-height:1.2}
-        .dc .l{font-size:11px;color:var(--t2);margin-top:3px}
-        .dc.y .n{color:var(--gold)}
-        .dash-sec{padding:10px 14px;border-top:1px solid var(--bd)}
-        .dash-sec h4{font-size:12px;color:var(--accent2);font-weight:500;margin:0 0 6px;display:flex;align-items:center;gap:5px;cursor:pointer;padding:4px 5px;border-radius:3px;transition:background .15s}
-        .dash-sec h4:hover{background:rgba(88,166,255,.08)}
-        .dash-sec h4.active{background:rgba(88,166,255,.15);color:var(--accent)}
-        .dash-sec h4::before{content:'';width:3px;height:12px;background:var(--accent);border-radius:2px;flex-shrink:0}
-        .dash-chart{width:100%;height:190px}
-        .dash-chart.tall{height:250px}
 
         /* ── 图例 ── */
         #legend{position:absolute;bottom:16px;left:336px;z-index:100;background:rgba(13,17,23,.92);border:1px solid var(--bd);border-radius:8px;padding:12px 16px;backdrop-filter:blur(8px);transition:left .3s}
@@ -234,74 +236,11 @@
 
         /* (三维弹窗样式已合并到上方) */
 
-        /* ── AI 筛选结果浮动面板 ── */
-        #chatResults{display:none;position:absolute;top:calc(var(--hdr) + 50px);left:calc(var(--dash-w) + 6px);z-index:160;
-            width:280px;max-height:calc(100vh - var(--hdr) - 80px);
-            background:rgba(13,17,23,.96);border:1px solid var(--bd);border-radius:8px;
-            backdrop-filter:blur(12px);box-shadow:0 8px 32px rgba(0,0,0,.4);overflow:hidden;
-            animation:slideIn .2s ease-out}
-        #chatResults.open{display:flex;flex-direction:column}
-        .cr-hdr{padding:10px 14px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:rgba(13,17,23,.98)}
-        .cr-hdr span{font-size:13px;color:var(--accent);font-weight:600}
-        .cr-close{width:24px;height:24px;background:rgba(255,255,255,.08);border:none;border-radius:4px;color:var(--t2);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-        .cr-close:hover{background:rgba(255,255,255,.15);color:#fff}
-        #crList{overflow-y:auto;flex:1}
-        .cr-item{padding:8px 14px;border-bottom:1px solid rgba(255,255,255,.03);cursor:pointer;transition:background .15s}
-        .cr-item:hover{background:rgba(88,166,255,.08)}
-        .cr-item .cr-name{font-size:12px;color:var(--t1);margin-bottom:2px;display:flex;align-items:center;gap:5px}
-        .cr-item .cr-name .cr-3d{color:var(--gold);font-size:10px}
-        .cr-item .cr-meta{font-size:10px;color:var(--t2);display:flex;gap:6px}
-        .cr-item .cr-meta .cr-cat{color:var(--green)}.cr-item .cr-meta .cr-era{color:var(--accent2)}
-
         /* ── 加载 ── */
         #loading{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:300;text-align:center;color:var(--accent)}
         .spinner{width:40px;height:40px;border:3px solid rgba(88,166,255,.2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
         @keyframes spin{to{transform:rotate(360deg)}}
         .cesium-viewer-bottom{display:none!important}
-
-        /* ── AI 对话 ── */
-        #chatBtn{position:fixed;bottom:24px;right:calc(var(--dash-w) + 16px);z-index:180;width:52px;height:52px;border-radius:50%;
-            background:linear-gradient(135deg,#58a6ff,#bc8cff);border:none;cursor:pointer;
-            box-shadow:0 4px 20px rgba(88,166,255,.4);display:flex;align-items:center;justify-content:center;
-            transition:all .2s;color:#fff}
-        #chatBtn:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(88,166,255,.5)}
-        #chatBtn.on{background:linear-gradient(135deg,#bc8cff,#58a6ff)}
-        #chatBtn svg{width:26px;height:26px;fill:#fff}
-        #chatPanel{position:fixed;bottom:86px;right:calc(var(--dash-w) + 16px);z-index:180;width:420px;height:540px;
-            background:rgba(13,17,23,.97);border:1px solid var(--bd);border-radius:12px;
-            backdrop-filter:blur(12px);box-shadow:0 12px 48px rgba(0,0,0,.5);
-            display:none;flex-direction:column;overflow:hidden}
-        #chatPanel.open{display:flex;animation:slideIn .2s ease-out}
-        .cp-hdr{padding:12px 16px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-        .cp-hdr h3{font-size:14px;color:var(--accent);font-weight:600;display:flex;align-items:center;gap:6px}
-        .cp-model{height:26px;padding:0 6px;background:var(--bg3);border:1px solid var(--bd);border-radius:4px;color:var(--purple);font-size:11px;font-family:inherit;outline:none;cursor:pointer;max-width:150px}
-        .cp-model:focus{border-color:var(--accent);color:var(--t1)}
-        .cp-hdr button{background:none;border:none;color:var(--t2);font-size:12px;cursor:pointer;padding:4px 8px;border-radius:4px}
-        .cp-hdr button:hover{background:rgba(255,255,255,.08);color:var(--t1)}
-        #chatMessages{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:10px}
-        .cm{display:flex}
-        .cm-user{justify-content:flex-end}
-        .cm-user .cm-bubble{background:rgba(88,166,255,.15);border:1px solid rgba(88,166,255,.25);color:var(--t1)}
-        .cm-ai{justify-content:flex-start}
-        .cm-ai .cm-bubble{background:var(--bg3);border:1px solid rgba(255,255,255,.06);color:var(--t3)}
-        .cm-bubble{max-width:85%;padding:8px 12px;border-radius:10px;font-size:13px;line-height:1.7;word-break:break-word}
-        .cm-bubble .cf{color:#58a6ff;cursor:pointer;text-decoration:underline;text-decoration-style:dashed;
-            text-underline-offset:3px;transition:all .15s;font-weight:600;white-space:nowrap}
-        .cm-bubble .cf:hover{color:#79c0ff;text-decoration-style:solid;background:rgba(88,166,255,.1);border-radius:3px;padding:0 2px;margin:0 -2px}
-        .cm-bubble .cf-log{color:var(--green)}
-        .cm-bubble .cf-log:hover{color:#56d364;background:rgba(63,185,80,.1)}
-        .cm-typing{color:var(--t2);font-style:italic}
-        .cm-cursor{display:inline-block;width:2px;height:14px;background:var(--accent);margin-left:2px;vertical-align:text-bottom;animation:blink 1s step-end infinite}
-        @keyframes blink{50%{opacity:0}}
-        .cp-input{padding:10px 14px;border-top:1px solid var(--bd);display:flex;gap:8px;flex-shrink:0;background:rgba(13,17,23,.98)}
-        #chatInput{flex:1;height:36px;background:var(--bg3);border:1px solid var(--bd);border-radius:6px;
-            padding:0 12px;color:var(--t1);font-size:13px;font-family:inherit;outline:none}
-        #chatInput:focus{border-color:var(--accent)}
-        #chatInput::placeholder{color:var(--t2)}
-        #chatSend{height:36px;padding:0 16px;background:var(--accent);border:none;border-radius:6px;
-            color:#fff;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500;white-space:nowrap}
-        #chatSend:hover{background:var(--accent2)}
-        #chatSend:disabled{opacity:.5;cursor:not-allowed}
 
         /* ── 设置面板（屏幕居中模态） ── */
         #adminBtn{width:34px;height:34px;background:var(--bg3);border:1px solid var(--bd);border-radius:6px;color:var(--t2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
@@ -389,179 +328,7 @@
         /* ═══════════════════════════════════════════════════════════
            Mobile-only elements (hidden on desktop)
            ═══════════════════════════════════════════════════════════ */
-        #mobileNav,#mobileStatsBar{display:none}
-
-        /* ── 普查路线面板 ── */
-        #routePanel{
-            position:fixed;right:-380px;top:var(--hdr);width:360px;bottom:0;z-index:150;
-            background:linear-gradient(180deg,rgba(13,17,23,.97),rgba(18,22,28,.97));
-            border-left:1px solid var(--bd);backdrop-filter:blur(16px);
-            transition:right .35s cubic-bezier(.4,0,.2,1);
-            display:flex;flex-direction:column;overflow:hidden;
-        }
-        #routePanel.open{right:0}
-        .rp-title{
-            display:flex;align-items:center;justify-content:space-between;
-            padding:14px 16px;font-size:15px;font-weight:600;color:var(--t1);
-            border-bottom:1px solid var(--bd);flex-shrink:0;
-        }
-        .rp-title button{
-            background:none;border:none;color:var(--t2);font-size:20px;cursor:pointer;
-            width:28px;height:28px;display:flex;align-items:center;justify-content:center;
-            border-radius:6px;transition:background .2s;
-        }
-        .rp-title button:hover{background:var(--bd)}
-        .rp-summary{
-            padding:8px 16px;font-size:12px;color:var(--accent);flex-shrink:0;
-        }
-        .rp-actions{
-            display:flex;gap:8px;padding:4px 16px 10px;flex-shrink:0;
-        }
-        .rp-btn{
-            padding:4px 12px;border-radius:6px;font-size:12px;cursor:pointer;
-            background:var(--bd);color:var(--t1);border:1px solid var(--bd);
-            transition:background .2s;
-        }
-        .rp-btn:hover{background:var(--bd-active)}
-        .rp-list{
-            flex:1;overflow-y:auto;padding:0 8px 12px;
-        }
-        .rp-list::-webkit-scrollbar{width:5px}
-        .rp-list::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
-        .route-date-row{
-            display:flex;align-items:center;gap:8px;padding:7px 10px;
-            border-radius:6px;cursor:pointer;transition:background .15s;font-size:13px;
-        }
-        .route-date-row:hover{background:var(--bd)}
-        .route-date-row input[type="checkbox"]{
-            accent-color:var(--accent);cursor:pointer;margin:0;flex-shrink:0;
-        }
-        .route-color-dot{
-            width:10px;height:10px;border-radius:50%;flex-shrink:0;
-        }
-        .route-date-text{color:var(--t1);flex:1;white-space:nowrap}
-        .route-date-count{color:var(--t2);font-size:11px;flex-shrink:0}
-        .route-fly-btn{
-            background:none;border:none;color:var(--t2);cursor:pointer;
-            font-size:14px;padding:2px 4px;border-radius:4px;transition:color .2s;flex-shrink:0;
-        }
-        .route-fly-btn:hover{color:var(--accent)}
-
-        /* ── 村村达 ── */
-        #btnVillageCoverage{transition:background .2s,color .2s}
-        #btnVillageCoverage.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:600}
-        .cv-stats{padding:8px 16px;border-bottom:1px solid var(--bd);flex-shrink:0}
-        .cv-stat-row{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--t1)}
-        .cv-reached{font-weight:700;color:#3fb950;font-size:16px}
-        .cv-pct{margin-left:auto;font-weight:700;color:var(--accent);font-size:14px}
-        .cv-bar{height:6px;background:rgba(248,81,73,0.3);border-radius:3px;margin-top:6px;overflow:hidden}
-        .cv-bar-fill{height:100%;background:linear-gradient(90deg,#3fb950,#58a6ff);border-radius:3px;transition:width .6s}
-        .cv-unreached{max-height:200px;overflow-y:auto;border-bottom:1px solid var(--bd);flex-shrink:0}
-        .cv-unreached::-webkit-scrollbar{width:4px}
-        .cv-unreached::-webkit-scrollbar-thumb{background:var(--bd);border-radius:2px}
-        .cv-list-title{padding:6px 16px;font-size:11px;color:var(--t2);font-weight:600;position:sticky;top:0;background:rgba(13,17,23,.97)}
-        .cv-village-row{
-            display:flex;align-items:center;gap:8px;padding:5px 16px;cursor:pointer;
-            transition:background .15s;font-size:12px;
-        }
-        .cv-village-row:hover{background:var(--bd)}
-        .cv-village-name{color:var(--t1);flex:1}
-        .cv-village-town{color:var(--t2);font-size:11px;flex-shrink:0}
-
-        /* ── 日志按钮 & 村庄提示 ── */
-        .route-log-btn{
-            background:none;border:none;cursor:pointer;font-size:14px;
-            padding:2px 4px;border-radius:4px;transition:all .2s;flex-shrink:0;
-            opacity:.7;
-        }
-        .route-log-btn:hover{opacity:1;transform:scale(1.15)}
-        .route-village-tip{
-            padding:2px 10px 4px 36px;font-size:10px;color:var(--t2);
-            white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-            opacity:.8;
-        }
-
-        /* ── 工作日志查看面板 ── */
-        .worklog-panel{
-            position:fixed;top:0;right:-52vw;width:50vw;height:100vh;z-index:300;
-            background:linear-gradient(180deg,rgba(13,17,23,.99),rgba(18,22,28,.99));
-            border-left:1px solid var(--bd);backdrop-filter:blur(16px);
-            transition:right .35s cubic-bezier(.4,0,.2,1);
-            display:flex;flex-direction:column;overflow:hidden;
-            box-shadow:-8px 0 40px rgba(0,0,0,.5);
-        }
-        .worklog-panel.open{right:0}
-        .wl-header{
-            display:flex;align-items:center;justify-content:space-between;
-            padding:12px 18px;border-bottom:1px solid var(--bd);flex-shrink:0;
-            background:linear-gradient(135deg,rgba(88,166,255,.08),transparent);
-        }
-        .wl-title-group{display:flex;align-items:center;gap:12px}
-        .wl-title{font-size:15px;color:var(--accent);font-weight:600;margin:0}
-        .wl-date{font-size:13px;color:var(--t2);background:var(--bg3);padding:3px 10px;border-radius:4px}
-        .wl-nav{display:flex;align-items:center;gap:4px}
-        .wl-nav-btn{
-            width:28px;height:28px;background:var(--bg3);border:1px solid var(--bd);
-            border-radius:5px;color:var(--t2);cursor:pointer;font-size:12px;
-            display:flex;align-items:center;justify-content:center;transition:all .2s;
-        }
-        .wl-nav-btn:hover{border-color:var(--accent);color:var(--accent)}
-        .wl-close-btn{
-            width:28px;height:28px;background:rgba(248,81,73,.1);border:1px solid rgba(248,81,73,.3);
-            border-radius:5px;color:var(--red);cursor:pointer;font-size:14px;
-            display:flex;align-items:center;justify-content:center;transition:all .2s;
-            margin-left:4px;
-        }
-        .wl-close-btn:hover{background:rgba(248,81,73,.2);border-color:var(--red)}
-        .wl-ledger{
-            padding:8px 18px;border-bottom:1px solid var(--bd);flex-shrink:0;
-        }
-        .wl-row{
-            display:flex;padding:2px 0;font-size:12px;
-        }
-        .wl-label{width:60px;color:var(--t2);flex-shrink:0}
-        .wl-val{color:var(--t1);flex:1;word-break:break-all}
-        .wl-villages{color:var(--green);font-weight:500}
-        .wl-stat-review{color:var(--accent)}
-        .wl-stat-new{color:var(--green)}
-        .wl-relic-inline{display:flex;flex-wrap:wrap;align-items:center;gap:5px;padding:3px 0}
-        .wl-relic-tag{font-size:11px;font-weight:600;flex-shrink:0}
-        .wl-relic-tag b{font-size:13px;margin-left:2px}
-        .wl-relic-link{padding:1px 7px;border-radius:3px;font-size:11px;cursor:pointer;
-            background:rgba(255,255,255,.06);color:var(--t3);border:1px solid var(--bg4);transition:all .15s}
-        .wl-relic-link:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
-        .wl-relic-nolink{padding:1px 7px;border-radius:3px;font-size:11px;color:var(--t2);opacity:.5}
-        .wl-no-ledger,.wl-no-pdf{padding:20px;text-align:center;font-size:12px;color:var(--t2)}
-
-        /* PDF 自定义查看器 */
-        .wl-pdf-toolbar{
-            display:flex;align-items:center;justify-content:center;gap:16px;
-            padding:8px 18px;border-bottom:1px solid var(--bd);flex-shrink:0;
-            background:rgba(22,27,34,.95);
-        }
-        .wl-page-btn{
-            padding:5px 14px;background:var(--bg3);border:1px solid var(--bd);
-            border-radius:5px;color:var(--t2);font-size:12px;cursor:pointer;
-            font-family:inherit;transition:all .2s;
-        }
-        .wl-page-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
-        .wl-page-btn:disabled{opacity:.35;cursor:not-allowed}
-        .wl-page-info{
-            font-size:13px;color:var(--t1);font-weight:600;min-width:50px;text-align:center;
-        }
-        .wl-pdf-viewport{
-            flex:1;overflow-y:auto;display:flex;justify-content:center;
-            padding:8px;background:rgba(30,30,30,.6);
-        }
-        .wl-pdf-viewport canvas{
-            display:block;max-width:100%;
-            box-shadow:0 2px 16px rgba(0,0,0,.4);border-radius:4px;
-        }
-
-        @media(max-width:768px){
-            .worklog-panel{width:100vw;right:-100vw}
-            .worklog-panel.open{right:0}
-        }
+        #mobileNav{display:none}
 
         /* ── 路线点位弹窗 ── */
         .route-popup{
@@ -615,32 +382,6 @@
             /* ── Filter panel: full overlay ── */
             #filterPanel{width:100%;z-index:220;top:calc(var(--hdr) + 36px);bottom:56px}
 
-            /* ── Dashboards: hidden on mobile ── */
-            .dash{display:none!important}
-            body.m-stats-l #dashL,body.m-stats-r #dashR{
-                display:block!important;position:fixed!important;
-                top:calc(var(--hdr) + 36px + 40px)!important;left:0!important;right:0!important;bottom:56px!important;
-                width:100%!important;z-index:220!important;
-                border:none!important;border-radius:0!important;
-                background:rgba(13,17,23,.98)!important
-            }
-            body.m-stats-l #dashL .dash-hdr,body.m-stats-r #dashR .dash-hdr{display:none!important}
-            .dash-chart{height:220px!important}
-            .dash-chart.tall{height:280px!important}
-
-            /* ── Mobile Stats Tab Bar ── */
-            #mobileStatsBar{
-                position:fixed;top:calc(var(--hdr) + 36px);left:0;right:0;height:40px;z-index:221;
-                background:rgba(22,27,34,.98);border-bottom:1px solid var(--bd);
-                align-items:center;justify-content:center;backdrop-filter:blur(8px)
-            }
-            body.m-stats-l #mobileStatsBar,body.m-stats-r #mobileStatsBar{display:flex}
-            .mst-tab{
-                flex:1;height:100%;background:none;border:none;border-bottom:2px solid transparent;
-                color:var(--t2);font-size:13px;font-family:inherit;cursor:pointer;transition:all .2s
-            }
-            .mst-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
-
             /* ── Info panel: full overlay ── */
             #infoPanel{
                 position:fixed!important;top:var(--hdr)!important;left:0!important;right:0!important;
@@ -648,14 +389,6 @@
                 border-radius:0!important;z-index:230!important;animation:none!important
             }
             #infoPanel.shifted{right:0!important}
-
-            /* ── Chat: full overlay ── */
-            #chatBtn{display:none!important}
-            #chatPanel{
-                position:fixed!important;top:var(--hdr)!important;left:0!important;right:0!important;
-                bottom:56px!important;width:100%!important;height:auto!important;
-                border-radius:0!important;z-index:220!important
-            }
 
             /* ── Legend ── */
             #legend{left:10px!important;bottom:66px;max-width:calc(100vw - 20px);font-size:10px}
@@ -675,7 +408,6 @@
             /* ── Misc repositioning ── */
             #scaleBar{bottom:64px}
             #toast{bottom:70px}
-            #chatResults{left:10px!important;top:calc(var(--hdr) + 46px)!important;width:calc(100vw - 20px)!important}
             .lb-nav{width:36px;height:36px;font-size:18px}
             .lb-prev{left:8px}.lb-next{right:8px}
             .pg{grid-template-columns:repeat(2,1fr)}
@@ -706,7 +438,7 @@
         }
     </style>
 </head>
-<body>
+<body class="minimal-mode">
 
 <!-- 顶部 -->
 <div id="header">
@@ -799,20 +531,6 @@
     </div>
 </div>
 
-<!-- 普查路线面板 -->
-<div id="routePanel">
-    <div class="rp-title">普查路线查看<button onclick="toggleRoutePanel()">&times;</button></div>
-    <div class="rp-summary" id="routeSummary">加载中...</div>
-    <div class="rp-actions">
-        <button class="rp-btn" onclick="routeSelectAll()">全选</button>
-        <button class="rp-btn" onclick="routeDeselectAll()">取消全选</button>
-        <button class="rp-btn" id="btnVillageCoverage" onclick="toggleVillageCoverage()">村村达</button>
-    </div>
-    <div id="coverageStats" class="cv-stats" style="display:none"></div>
-    <div id="unreachedList" class="cv-unreached" style="display:none"></div>
-    <div class="rp-list" id="routeDateList"></div>
-</div>
-
 <!-- Cesium -->
 <div id="cesiumContainer"></div>
 
@@ -854,29 +572,6 @@
     </div>
     <div class="fp-stat" id="filterStat"></div>
     <div id="resultList"></div>
-</div>
-
-<!-- 左侧仪表盘 -->
-<div class="dash dock-l" id="dashL">
-    <div class="dash-hdr"><span>数据统计</span><div class="dh-acts"><button onclick="toggleDashSide('dashL')" title="切换停靠侧">⇄</button><button onclick="toggleDashVis('dashL')" title="收起">−</button></div></div>
-    <div class="dash-cards">
-        <div class="dc"><div class="n" id="stTotal">-</div><div class="l">文物总量</div></div>
-        <div class="dc y"><div class="n" id="st3d">-</div><div class="l">三维模型</div></div>
-    </div>
-    <div class="dash-sec"><h4 onclick="setColorBy('category_main')">文物类别</h4><div id="chCat" class="dash-chart"></div></div>
-    <div class="dash-sec"><h4 onclick="setColorBy('heritage_level')">文物级别</h4><div id="chLevel" class="dash-chart"></div></div>
-    <div class="dash-sec"><h4 onclick="setColorBy('survey_type')">普查类型</h4><div id="chSurvey" class="dash-chart"></div></div>
-</div>
-
-<!-- 右侧仪表盘 -->
-<div class="dash dock-r" id="dashR">
-    <div class="dash-hdr"><span>分布分析</span><div class="dh-acts"><button onclick="toggleDashSide('dashR')" title="切换停靠侧">⇄</button><button onclick="toggleDashVis('dashR')" title="收起">−</button></div></div>
-    <div class="dash-sec"><h4 onclick="setColorBy('township')">乡镇分布</h4><div id="chTown" class="dash-chart tall"></div></div>
-    <div class="dash-sec"><h4 onclick="setColorBy('era')">年代分布</h4><div id="chEra" class="dash-chart"></div></div>
-    <div class="dash-sec"><h4 onclick="setColorBy('ownership_type')">所有权</h4><div id="chOwner" class="dash-chart"></div></div>
-    <div class="dash-sec"><h4 onclick="setColorBy('industry')">所属行业</h4><div id="chIndustry" class="dash-chart"></div></div>
-    <div class="dash-sec"><h4 onclick="setColorBy('risk_factors')">影响因素</h4><div id="chRisk" class="dash-chart"></div></div>
-    <div class="dash-sec"><h4 onclick="setColorBy('condition_level')">评估状态</h4><div id="chCondition" class="dash-chart"></div></div>
 </div>
 
 <!-- 指北针 -->
@@ -986,25 +681,6 @@
         <button class="m3d-close" onclick="closePdfBox()">&times;</button>
     </div>
     <iframe id="pdfFrame" style="flex:1;border:none;width:100%;height:100%" src="about:blank"></iframe>
-</div>
-
-<!-- AI 对话 -->
-<button id="chatBtn" onclick="toggleChat()" title="AI 文物助手">
-    <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/><path d="M7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z"/></svg>
-</button>
-<div id="chatPanel">
-    <div class="cp-hdr">
-        <h3>文物 AI 助手</h3>
-        <div style="display:flex;align-items:center;gap:4px">
-            <select id="chatModel" class="cp-model" title="切换 AI 模型"></select>
-            <button onclick="clearChat()">清空</button><button onclick="toggleChat()">收起</button>
-        </div>
-    </div>
-    <div id="chatMessages"></div>
-    <div class="cp-input">
-        <input id="chatInput" type="text" placeholder="问我关于{{ county_name }}文物的任何问题...">
-        <button id="chatSend" onclick="sendChat()">发送</button>
-    </div>
 </div>
 
 <!-- 设置面板遮罩 -->
@@ -1138,18 +814,6 @@
     </div>
 </div>
 
-<!-- AI 筛选结果浮动面板 -->
-<div id="chatResults">
-    <div class="cr-hdr"><span id="crTitle">筛选结果</span><button class="cr-close" onclick="closeChatResults()">&times;</button></div>
-    <div id="crList"></div>
-</div>
-
-<!-- Mobile: Stats Tab Bar -->
-<div id="mobileStatsBar">
-    <button class="mst-tab active" onclick="mobileStatTab('dashL',this)">数据统计</button>
-    <button class="mst-tab" onclick="mobileStatTab('dashR',this)">分布分析</button>
-</div>
-
 <!-- Mobile: Bottom Nav -->
 <div id="mobileNav">
     <button class="mn-btn active" data-tab="map" onclick="mobileSetTab('map')">
@@ -1159,14 +823,6 @@
     <button class="mn-btn" data-tab="filter" onclick="mobileSetTab('filter')">
         <svg viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
         <span>筛选</span>
-    </button>
-    <button class="mn-btn" data-tab="stats" onclick="mobileSetTab('stats')">
-        <svg viewBox="0 0 24 24"><path d="M11 2v20C5.48 21.5 1 16.82 1 11S5.48.5 11 2zm2 0v9h9c-.47-4.82-4.18-8.53-9-9zm0 11v9c4.82-.47 8.53-4.18 9-9h-9z"/></svg>
-        <span>统计</span>
-    </button>
-    <button class="mn-btn" data-tab="chat" onclick="mobileSetTab('chat')">
-        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/><path d="M7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z"/></svg>
-        <span>AI</span>
     </button>
 </div>
 
@@ -1182,14 +838,10 @@
 <script src="/static/js/boundary.js"></script>
 <script src="/static/js/render.js"></script>
 <script src="/static/js/filter.js"></script>
-<script src="/static/js/charts.js"></script>
 <script src="/static/js/info.js"></script>
 <script src="/static/js/lightbox.js"></script>
 <script src="/static/js/model3d.js"></script>
 <script src="/static/js/layout.js"></script>
-<script src="/static/js/worklog.js"></script>
-<script src="/static/js/route.js"></script>
-<script src="/static/js/chat.js"></script>
 <script src="/static/js/app.js"></script>
 </body>
 </html>
