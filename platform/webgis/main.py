@@ -21,7 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from fastapi import FastAPI, Request  # noqa: E402
 from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
-from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Response  # noqa: E402
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Response, PlainTextResponse  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
 from pydantic import BaseModel  # noqa: E402
 from starlette.concurrency import run_in_threadpool  # noqa: E402
@@ -52,6 +52,7 @@ _PATHS = get_paths()
 WEBGIS_DIR = Path(__file__).resolve().parent
 TEMPLATES_DIR = WEBGIS_DIR / "templates"
 STATIC_DIR = WEBGIS_DIR / "static"
+FRONTEND_DIST = PROJECT_ROOT / "frontend" / "dist"
 TILE_CACHE_DIR = PROJECT_ROOT / "data" / "output" / "tile_cache"
 TILE_CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -354,6 +355,7 @@ _mount_if_exists("/3d", _PATHS.input_models_3d, "3d_models", create=True)
 _mount_if_exists("/pdfs", PROJECT_ROOT / "data" / "input" / "01_archives_pdf", "pdfs")
 _mount_if_exists("/survey-photos", _PATHS.input_worklogs / "survey_photos", "survey_photos")
 _mount_if_exists("/static", STATIC_DIR, "static")
+_mount_if_exists("/assets", FRONTEND_DIST / "assets", "vue_assets")
 
 
 def _bootstrap_script() -> str:
@@ -440,6 +442,17 @@ def _render_template(name: str) -> str:
 @app.get("/", response_class=HTMLResponse)
 async def index():
     return _render_template("index.html")
+
+
+@app.get("/vue", response_class=HTMLResponse)
+async def vue_index():
+    index_path = FRONTEND_DIST / "index.html"
+    if not index_path.exists():
+        return PlainTextResponse(
+            "Vue 前端尚未构建。请在项目根目录执行: cd frontend && npm install && npm run build",
+            status_code=404,
+        )
+    return HTMLResponse(index_path.read_text(encoding="utf-8"))
 
 
 @app.get("/model-viewer", response_class=HTMLResponse)
